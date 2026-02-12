@@ -2,6 +2,10 @@
 
 A Next.js implementation of the "Recursive Grid" coding challenge.
 
+## Live Demo
+
+**[View Live Application](https://the-recursive-grid.vercel.app/)**
+
 ## Features
 
 - **Framework**: Next.js 16 (App Router)
@@ -53,10 +57,3 @@ The grid consists of 9 boxes (3x3), all starting at 0.
     npm run dev
     ```
 3.  Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Deployment (Vercel)
-
-1.  Push this repository to GitHub.
-2.  Log in to [Vercel](https://vercel.com).
-3.  Click "Add New Project" -> "Import" the repository.
-4.  Click "Deploy". No configuration needed.
