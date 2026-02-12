@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Recursive Grid
 
-## Getting Started
+A Next.js implementation of the "Recursive Grid" coding challenge.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Framework**: Next.js 16 (App Router)
+- **Styling**: Vanilla CSS Modules (no external libraries)
+- **Language**: TypeScript
+- **State Management**: React `useState` with a breadth-first update queue for ripple effects.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## The Logic
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The grid consists of 9 boxes (3x3), all starting at 0.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Interaction Rules
+1.  **Click**: Increment a box by 1.
+2.  **Ripple Rules**:
+    -   If a box's new number is divisible by **3**, decrement the box to its **RIGHT** by 1. (Unless in the last column).
+    -   If a box's new number is divisible by **5**, increment the box **BELOW** it by 2. (Unless in the bottom row).
+    -   These rules trigger recursively for any updated box.
 
-## Learn More
+### Visual Rules
+-   **Even Numbers**: Light Gray (`#e0e0e0`).
+-   **Odd Numbers**: Navy Blue (`#1a237e`), White Text.
+-   **Locked State**: If a box reaches **15**:
+    -   Background turns Red (`#d32f2f`).
+    -   Box cannot be clicked.
+    -   Neighbors cannot change its value.
 
-To learn more about Next.js, take a look at the following resources:
+## Implementation Details
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+-   **State**: The grid is stored as a flat array of 9 numbers. `grid[index]`.
+-   **Recursion Handling**: Instead of deep recursion which might cause stack overflow (though unlikely here) or React render loops, we use an iterative queue processing approach within the click handler:
+    1.  Push initial click to queue.
+    2.  Structure: `{ index, change }`.
+    3.  While queue is not empty:
+        -   Pop item.
+        -   If target is locked, skip.
+        -   Apply change.
+        -   Check new value for Div-3 and Div-5 rules.
+        -   Push resulting neighbor updates to queue.
+    4.  Update React state once with the final grid.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## How to Run Locally
 
-## Deploy on Vercel
+1.  Install dependencies:
+    ```bash
+    npm install
+    ```
+2.  Run the development server:
+    ```bash
+    npm run dev
+    ```
+3.  Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment (Vercel)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  Push this repository to GitHub.
+2.  Log in to [Vercel](https://vercel.com).
+3.  Click "Add New Project" -> "Import" the repository.
+4.  Click "Deploy". No configuration needed.
